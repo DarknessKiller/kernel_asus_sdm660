@@ -3173,7 +3173,10 @@ try_onemore:
 
 #ifdef CONFIG_QUOTA
 	sb->dq_op = &f2fs_quota_operations;
-	sb->s_qcop = &f2fs_quotactl_ops;
+	if (f2fs_sb_has_quota_ino(sbi))
+		sb->s_qcop = &dquot_quotactl_sysfile_ops;
+	else
+		sb->s_qcop = &f2fs_quotactl_ops;
 	sb->s_quota_types = QTYPE_MASK_USR | QTYPE_MASK_GRP | QTYPE_MASK_PRJ;
 
 	if (f2fs_sb_has_quota_ino(sbi)) {
